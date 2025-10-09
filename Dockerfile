@@ -1,16 +1,10 @@
-## Base: Debian (stable) + Mono official repo
-## Rationale: older mono:<tag>-slim images often have EOL apt sources
-## which break `apt-get update` during build. Use Debian + Mono repo
-## to reliably install xsp4 and runtime.
 FROM debian:bullseye-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-## Install Mono + xsp4 from Debian official repos (no external Mono repo)
-## This avoids fetching external GPG keys and works behind restricted networks.
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      ca-certificates curl \
+      ca-certificates \
       mono-complete \
       apache2 libapache2-mod-mono mono-apache-server4 && \
     rm -rf /var/lib/apt/lists/*
@@ -19,9 +13,7 @@ WORKDIR /app
 COPY ./app/ /app/
 
 EXPOSE 8080
-HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD curl -fsS http://localhost:8080/ >/dev/null || exit 1
 
-# Configure Apache to serve ASP.NET via mod_mono on port 8080
 RUN set -eux; \
     echo 'Listen 8080' > /etc/apache2/ports.conf; \
     a2enmod mono || true; \
