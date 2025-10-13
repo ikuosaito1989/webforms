@@ -8,7 +8,7 @@ Inherits="_Default" %>
   </head>
   <body>
     <form id="form1" runat="server">
-      <h1>✅ Mono + Web Forms (CodeBehind)</h1>
+      <h1>Mono + Web Forms (CodeBehind)</h1>
       <asp:Label
         ID="Label1"
         runat="server"
